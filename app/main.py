@@ -12,7 +12,7 @@ if __name__ == "__main__":
     import os, uvicorn
     uvicorn.run("app.main:app", host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
 
-    
+
 # ----- Database setup (SQLite by default; supports Postgres via DATABASE_URL) -----
 DATABASE_URL = os.getenv("DATABASE_URL")  # e.g., "postgresql+psycopg://user:pass@host/db"
 if DATABASE_URL:
@@ -67,3 +67,7 @@ def list_data():
     with Session(engine) as session:
         stmt = select(Entry).order_by(Entry.created_at.asc())
         return list(session.exec(stmt))
+
+@app.get("/")
+def health():
+    return {"status": "ok", "endpoints": ["/data (GET, POST)", "/docs"]}
